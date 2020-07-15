@@ -2,7 +2,8 @@
 
 namespace Webikevn\AuthenticateShopping\Models;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Auth\Authenticatable as AuthAuthenticatable;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -24,6 +25,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TblSession extends Model implements Authenticatable
 {
+    use AuthAuthenticatable;
+
     /**
      * The table associated with the model.
      * @var string
