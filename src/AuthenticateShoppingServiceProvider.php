@@ -14,7 +14,7 @@ class AuthenticateShoppingServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/src/config.php' => config_path('shopping_authenticate.php'),
+            __DIR__ . '/Config/shopping_authenticate.php' => config_path('shopping_authenticate.php'),
         ]);
     }
 
@@ -26,7 +26,7 @@ class AuthenticateShoppingServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/src/config.php', 'shopping_authenticate'
+            __DIR__ . '/Config/shopping_authenticate.php', 'shopping_authenticate'
         );
     }
 }
