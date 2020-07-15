@@ -11,8 +11,6 @@ use Webikevn\AuthenticateShopping\Models\TblSession;
 class AuthUserShoppingProvider extends EloquentUserProvider implements UserProvider
 {
     /**
-     * 指定された資格情報によってユーザーを取得します.
-     *
      * @param array $credentials
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
