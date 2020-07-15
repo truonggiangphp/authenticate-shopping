@@ -4,7 +4,7 @@ namespace Webikevn\AuthenticateShopping;
 
 use Illuminate\Support\ServiceProvider;
 
-class AuthenticateShoppingServiceProvider extends Provider
+class AuthenticateShoppingServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
