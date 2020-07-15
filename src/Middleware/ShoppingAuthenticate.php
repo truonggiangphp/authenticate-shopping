@@ -25,7 +25,7 @@ class ShoppingAuthenticate
         if ($isCookie) {
             $monoris = Cookie::get(config('shopping_authenticate.monoris_cookie_name'));
         } else {
-            $monoris = $request->header(config('shopping_authenticate.monoris_cookie_name'));
+            $monoris = $request->header(config('shopping_authenticate.monoris_header_name'));
         }
 
 
