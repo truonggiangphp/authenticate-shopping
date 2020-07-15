@@ -27,6 +27,8 @@ class TblSession extends Model implements Authenticatable
 {
     use AuthAuthenticatable;
 
+    const MONORIS_HEADER = 'header';
+    const MONORIS_COOKIE = 'cookie';
     /**
      * The table associated with the model.
      * @var string

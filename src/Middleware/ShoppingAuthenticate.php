@@ -19,13 +19,21 @@ class ShoppingAuthenticate
     public function handle($request, Closure $next, $guard = null)
     {
         $auth = \Auth::guard(config('shopping_authenticate.auth_driver'));
-        $monoris9 = $request->header(config('shopping_authenticate.monoris_cookie_name'));
 
-        if (!$monoris9) {
+        $isCookie = config('shopping_authenticate.monoris_authenticate_type') === TblSession::MONORIS_COOKIE;
+
+        if ($isCookie) {
+            $monoris = Cookie::get(config('shopping_authenticate.monoris_cookie_name'));
+        } else {
+            $monoris = $request->header(config('shopping_authenticate.monoris_cookie_name'));
+        }
+
+
+        if (!$monoris) {
             return $this->response($request);
         }
         $credentials = [
-            with(new TblSession)->getTable() . '.session_id_a' => $monoris9,
+            with(new TblSession)->getTable() . '.session_id_a' => $monoris,
         ];
         $isAttempt = $auth->attempt($credentials) ?: false;
 
@@ -45,7 +53,7 @@ class ShoppingAuthenticate
         if ($request->ajax() || $request->wantsJson()) {
             return response('Unauthorized.', 401);
         } else {
-            return redirect('https://' . config('shopping_authenticate.domain') . '/wbs/login.html?nextpage=' . $request->fullUrl());
+            return redirect(config('shopping_authenticate.domain') . '?nextpage=' . $request->fullUrl());
         }
     }
 }
