@@ -5,6 +5,7 @@ namespace Webikevn\AuthenticateShopping\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Cookie;
 use Webikevn\AuthenticateShopping\Models\TblSession;
+use Webikevn\AuthenticateShopping\Services\Monoris;
 
 class ShoppingAuthenticate
 {
@@ -20,20 +21,7 @@ class ShoppingAuthenticate
     {
         $auth = \Auth::guard(config('shopping_authenticate.auth_driver'));
 
-        $isCookie = config('shopping_authenticate.monoris_authenticate_type') === TblSession::MONORIS_COOKIE;
-
-        if ($isCookie) {
-            $isDebug = config('shopping_authenticate.allow_debug_cookie');
-            if ($isDebug) {
-                $monoris = config('shopping_authenticate.cookie_debug');
-            } else {
-                $monoris = Cookie::get(config('shopping_authenticate.monoris_cookie_name'));
-            }
-        } else {
-            $monoris = $request->header(config('shopping_authenticate.monoris_header_name'));
-        }
-
-
+        $monoris = Monoris::getMonoris($request);
         if (!$monoris) {
             return $this->response($request);
         }
