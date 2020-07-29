@@ -25,7 +25,7 @@ class ShoppingAuthenticate
         if ($isCookie) {
             $isDebug = config('shopping_authenticate.allow_debug_cookie');
             if ($isDebug) {
-                $monoris = Cookie::get(config('shopping_authenticate.cookie_debug'));
+                $monoris = config('shopping_authenticate.cookie_debug');
             } else {
                 $monoris = Cookie::get(config('shopping_authenticate.monoris_cookie_name'));
             }
