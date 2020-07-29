@@ -23,7 +23,12 @@ class ShoppingAuthenticate
         $isCookie = config('shopping_authenticate.monoris_authenticate_type') === TblSession::MONORIS_COOKIE;
 
         if ($isCookie) {
-            $monoris = Cookie::get(config('shopping_authenticate.monoris_cookie_name'));
+            $isDebug = config('shopping_authenticate.allow_debug_cookie');
+            if ($isDebug) {
+                $monoris = Cookie::get(config('shopping_authenticate.cookie_debug'));
+            } else {
+                $monoris = Cookie::get(config('shopping_authenticate.monoris_cookie_name'));
+            }
         } else {
             $monoris = $request->header(config('shopping_authenticate.monoris_header_name'));
         }

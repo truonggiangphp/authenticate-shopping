@@ -8,5 +8,7 @@ return [
     'domain' => env('WEBIKE_DOMAIN', 'www.webike.net'),
     'enable' => true,
     'auth_driver' => 'web',
-    'monoris_authenticate_type' => TblSession::MONORIS_COOKIE
+    'monoris_authenticate_type' => TblSession::MONORIS_COOKIE,
+    'allow_debug_cookie' => env('ALLOW_NOT_AUTHENTICATE', false),
+    'cookie_debug' => env('COOKIE_DEBUG', ''),
 ];
