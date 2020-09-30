@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Auth\Authenticatable as AuthAuthenticatable;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 
 /**
  * Class TblSession.
@@ -25,7 +26,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TblSession extends Model implements Authenticatable
 {
-    use AuthAuthenticatable;
+    use AuthAuthenticatable, Authorizable;
 
     const MONORIS_HEADER = 'header';
     const MONORIS_COOKIE = 'cookie';
