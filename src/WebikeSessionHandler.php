@@ -11,6 +11,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\InteractsWithTime;
 use SessionHandlerInterface;
+use Illuminate\Session\ExistenceAwareInterface;
 
 class WebikeSessionHandler implements ExistenceAwareInterface, SessionHandlerInterface
 {
