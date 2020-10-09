@@ -90,7 +90,7 @@ class WebikeSessionHandler implements ExistenceAwareInterface, SessionHandlerInt
      */
     public function read($sessionId)
     {
-        $session = (object)$this->getQuery()->find($sessionId);
+        $session = (object)$this->getQuery()->where('session_id',$sessionId)->first();
 
         if ($this->expired($session)) {
             $this->exists = true;
