@@ -24,7 +24,7 @@ class CreateTableMpSessions extends Migration
             $table->string('session_id');
             $table->primary(['session_id']);
             $table->string('kaiin_id')->nullable();
-            $table->string('payload');
+            $table->text('payload');
             $table->string('ip_address');
             $table->dateTime('expiry_date');
             $table->timestamps();
