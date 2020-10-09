@@ -16,11 +16,16 @@ class CreateTableMpSessions extends Migration
         if (!config('shopping_authenticate.is_enable_store_session')) {
             return;
         }
+
+        if(Schema::connection('wgs')->hasTable('tbl_mp_session')) {
+            return;
+        }
         Schema::connection('wgs')->create('tbl_mp_session', function (Blueprint $table) {
             $table->string('session_id');
             $table->primary(['session_id']);
             $table->string('kaiin_id')->nullable();
             $table->string('payload');
+            $table->string('ip_address');
             $table->dateTime('expiry_date');
             $table->timestamps();
         });

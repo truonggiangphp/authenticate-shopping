@@ -2,7 +2,9 @@
 
 namespace Webikevn\AuthenticateShopping;
 
+use Illuminate\Session\Console\SessionTableCommand;
 use Illuminate\Support\ServiceProvider;
+use Webikevn\AuthenticateShopping\Console\CreateMpSessionCommand;
 
 class AuthenticateShoppingServiceProvider extends ServiceProvider
 {
@@ -30,5 +32,9 @@ class AuthenticateShoppingServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             __DIR__ . '/Config/shopping_authenticate.php', 'shopping_authenticate'
         );
+
+        $this->app->singleton('command.mp_session.table', function ($app) {
+            return new CreateMpSessionCommand($app['files'], $app['composer']);
+        });
     }
 }
