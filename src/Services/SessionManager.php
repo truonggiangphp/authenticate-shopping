@@ -35,13 +35,31 @@ class SessionManager
 
     /**
      * @param string $sessionKey
+     * @param string|null $sessionKaiinId
      * @return Collection
      */
-    public function getSessions(string $sessionKey): Collection
+    public static function getSessions(string $sessionKey, string $sessionKaiinId = null): Collection
     {
-        return TblMpSession::where('session_key', $sessionKey)
-            ->whereDate('expiry_date', '>', CarbonImmutable::now())
-            ->get();
+        $sessionsQuery = TblMpSession::where('session_key', $sessionKey)
+            ->whereDate('expiry_date', '>', CarbonImmutable::now());
+
+        if ($sessionKaiinId) {
+            $sessionsQuery->where('session_kaiin_id', $sessionKaiinId);
+        }
+        return $sessionsQuery->get();
+    }
+
+    /**
+     * @param string $sessionId
+     * @param array $content
+     * @return bool
+     */
+    public static function updateSession(string $sessionId, array $content): bool
+    {
+        return TblMpSession::where('session_id', $sessionId)
+            ->update([
+                'content' => $content
+            ]);
     }
 
     /**
@@ -51,12 +69,27 @@ class SessionManager
      */
     public static function storeAuthenticateSession($request, string $monoris)
     {
-        self::storeSession(
-            TblMpSession::AUTHENTICATE, [
-            'ip' => request()->ip(),
-            'last_login_time' => CarbonImmutable::now()->timestamp
-        ],
-            $monoris
-        );
+        $sessions = self::getSessions(TblMpSession::AUTHENTICATE, $monoris);
+
+        if ($sessions->isNotEmpty()) {
+            $session = $sessions->first();
+            $sessionId = $session->session_id;
+            self::updateSession(
+                $sessionId,
+                [
+                    'ip' => $request->ip(),
+                    'last_login_time' => CarbonImmutable::now()->timestamp
+                ]
+            );
+        } else {
+            self::storeSession(
+                TblMpSession::AUTHENTICATE, [
+                'ip' => $request->ip(),
+                'last_login_time' => CarbonImmutable::now()->timestamp
+            ],
+                $monoris
+            );
+        }
+
     }
 }

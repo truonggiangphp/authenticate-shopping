@@ -16,7 +16,7 @@ class CreateTableMpSessions extends Migration
         if (!config('shopping_authenticate.is_enable_store_session')) {
             return;
         }
-        Schema::connection('wgs')->create('table_mp_sessions', function (Blueprint $table) {
+        Schema::connection('wgs')->create('tbl_mp_session', function (Blueprint $table) {
             $table->string('session_id');
             $table->primary(['session_id']);
             $table->string('session_key');
@@ -37,6 +37,6 @@ class CreateTableMpSessions extends Migration
         if (!config('shopping_authenticate.is_enable_store_session')) {
             return;
         }
-        Schema::connection('wgs')->dropIfExists('table_mp_sessions');
+        Schema::connection('wgs')->dropIfExists('tbl_mp_session');
     }
 }
