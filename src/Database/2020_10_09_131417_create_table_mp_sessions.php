@@ -19,9 +19,8 @@ class CreateTableMpSessions extends Migration
         Schema::connection('wgs')->create('tbl_mp_session', function (Blueprint $table) {
             $table->string('session_id');
             $table->primary(['session_id']);
-            $table->string('session_key');
-            $table->string('session_kaiin_id')->nullable();
-            $table->json('content');
+            $table->string('kaiin_id')->nullable();
+            $table->string('payload');
             $table->dateTime('expiry_date');
             $table->timestamps();
         });
