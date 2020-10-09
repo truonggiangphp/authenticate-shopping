@@ -2,8 +2,10 @@
 
 namespace Webikevn\AuthenticateShopping\Middleware;
 
+use Carbon\Carbon;
 use Closure;
 use Illuminate\Support\Facades\Cookie;
+use Webikevn\AuthenticateShopping\Models\TblMpSession;
 use Webikevn\AuthenticateShopping\Models\TblSession;
 use Webikevn\AuthenticateShopping\Services\Monoris;
 
@@ -20,7 +22,7 @@ class ShoppingAuthenticate
     public function handle($request, Closure $next, $guard = null)
     {
         $auth = \Auth::guard(config('shopping_authenticate.auth_driver'));
-
+        $isSaveAuthenticateSession = config('shopping_authenticate.is_enable_store_session');
         $monoris = Monoris::getMonoris($request);
         if (!$monoris) {
             return $this->response($request);
@@ -31,6 +33,18 @@ class ShoppingAuthenticate
         $isAttempt = $auth->attempt($credentials) ?: false;
         if (!$isAttempt) {
             return $this->response($request);
+        }
+
+        if ($isSaveAuthenticateSession) {
+            $sessionAuthenticate = $request->session()->get(TblMpSession::AUTHENTICATE);
+            if (!$sessionAuthenticate) {
+                $request->session()->put(TblMpSession::AUTHENTICATE, [
+                    'last_login' => Carbon::now()->timestamp
+                ]);
+            } else {
+                $sessionAuthenticate['last_login'] = Carbon::now()->timestamp;
+                $request->session()->put(TblMpSession::AUTHENTICATE, $sessionAuthenticate);
+            }
         }
 
         return $next($request);

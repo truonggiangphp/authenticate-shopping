@@ -20,6 +20,12 @@ class AuthenticateShoppingServiceProvider extends ServiceProvider
         ]);
 
         $this->loadMigrationsFrom(__DIR__ . '/Database');
+
+        $this->app->bind(CreateMpSessionCommand::class, function ($app) {
+            return new CreateMpSessionCommand($app['files'], $app['composer']);
+        });
+
+        $this->registerCommands();
     }
 
     /**
@@ -32,10 +38,6 @@ class AuthenticateShoppingServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             __DIR__ . '/Config/shopping_authenticate.php', 'shopping_authenticate'
         );
-
-        $this->app->singleton(CreateMpSessionCommand::class, function ($app) {
-            return new CreateMpSessionCommand($app['files'], $app['composer']);
-        });
     }
 
 
