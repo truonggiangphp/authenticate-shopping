@@ -21,6 +21,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TblMpSession extends Model
 {
+    const AUTHENTICATE = 'authenticate';
+
     /**
      * The table associated with the model.
      * @var string

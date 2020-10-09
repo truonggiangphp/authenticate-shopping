@@ -16,10 +16,10 @@ class SessionManager
      * @param CarbonImmutable|null $expiryDate
      * @return string
      */
-    public function storeSession(string $sessionKey, array $content, string $kaiinSessionId = null, CarbonImmutable $expiryDate = null): string
+    public static function storeSession(string $sessionKey, array $content, string $kaiinSessionId = null, CarbonImmutable $expiryDate = null): string
     {
         if (!$expiryDate) {
-            $expiryDate = CarbonImmutable::today()->addMinutes(config('shopping_authenticate.session_expiry'));
+            $expiryDate = CarbonImmutable::now()->addMinutes(config('shopping_authenticate.session_expiry'));
         }
 
         $tblMpSession = new TblMpSession;
@@ -40,7 +40,23 @@ class SessionManager
     public function getSessions(string $sessionKey): Collection
     {
         return TblMpSession::where('session_key', $sessionKey)
-            ->whereDate('expiry_date', '>', CarbonImmutable::today())
+            ->whereDate('expiry_date', '>', CarbonImmutable::now())
             ->get();
+    }
+
+    /**
+     * @param $request
+     * @param string $monoris
+     * @return string
+     */
+    public static function storeAuthenticateSession($request, string $monoris)
+    {
+        self::storeSession(
+            TblMpSession::AUTHENTICATE, [
+            'ip' => request()->ip(),
+            'last_login_time' => CarbonImmutable::now()->timestamp
+        ],
+            $monoris
+        );
     }
 }

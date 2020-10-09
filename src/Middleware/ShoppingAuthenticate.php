@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Support\Facades\Cookie;
 use Webikevn\AuthenticateShopping\Models\TblSession;
 use Webikevn\AuthenticateShopping\Services\Monoris;
+use Webikevn\AuthenticateShopping\Services\SessionManager;
 
 class ShoppingAuthenticate
 {
@@ -20,6 +21,7 @@ class ShoppingAuthenticate
     public function handle($request, Closure $next, $guard = null)
     {
         $auth = \Auth::guard(config('shopping_authenticate.auth_driver'));
+        $isStoreAuthSession = config('shopping_authenticate.is_enable_login_session');
 
         $monoris = Monoris::getMonoris($request);
         if (!$monoris) {
@@ -29,6 +31,10 @@ class ShoppingAuthenticate
             with(new TblSession)->getTable() . '.session_id_a' => $monoris,
         ];
         $isAttempt = $auth->attempt($credentials) ?: false;
+
+        if ($isStoreAuthSession) {
+            SessionManager::storeAuthenticateSession($request, $monoris);
+        }
 
         if (!$isAttempt) {
             return $this->response($request);

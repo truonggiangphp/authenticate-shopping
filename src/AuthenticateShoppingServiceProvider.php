@@ -16,6 +16,8 @@ class AuthenticateShoppingServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/Config/shopping_authenticate.php' => config_path('shopping_authenticate.php'),
         ]);
+
+        $this->loadMigrationsFrom(__DIR__ . '/Database');
     }
 
     /**
