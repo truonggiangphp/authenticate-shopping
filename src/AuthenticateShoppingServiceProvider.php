@@ -33,8 +33,19 @@ class AuthenticateShoppingServiceProvider extends ServiceProvider
             __DIR__ . '/Config/shopping_authenticate.php', 'shopping_authenticate'
         );
 
-        $this->app->singleton('command.mp_session.table', function ($app) {
+        $this->app->singleton(CreateMpSessionCommand::class, function ($app) {
             return new CreateMpSessionCommand($app['files'], $app['composer']);
         });
+    }
+
+
+    /**
+     * @return void
+     */
+    private function registerCommands()
+    {
+        $this->commands([
+            CreateMpSessionCommand::class,
+        ]);
     }
 }
