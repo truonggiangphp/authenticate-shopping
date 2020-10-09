@@ -41,8 +41,7 @@ class SessionManager
     public static function getSessions(string $sessionKey, string $sessionKaiinId = null): Collection
     {
         $sessionsQuery = TblMpSession::where('session_key', $sessionKey)
-            ->whereDate('expiry_date', '>', CarbonImmutable::now());
-
+            ->where('expiry_date', '>', CarbonImmutable::now());
         if ($sessionKaiinId) {
             $sessionsQuery->where('session_kaiin_id', $sessionKaiinId);
         }
@@ -70,9 +69,8 @@ class SessionManager
     public static function storeAuthenticateSession($request, string $monoris)
     {
         $sessions = self::getSessions(TblMpSession::AUTHENTICATE, $monoris);
-
         if ($sessions->isNotEmpty()) {
-            $session = $sessions->first();
+            $session = $sessions->last();
             $sessionId = $session->session_id;
             self::updateSession(
                 $sessionId,
