@@ -85,7 +85,8 @@ class SessionManager
                 'ip' => $request->ip(),
                 'last_login_time' => CarbonImmutable::now()->timestamp
             ],
-                $monoris
+                $monoris,
+                CarbonImmutable::now()->addDays(7)
             );
         }
 
