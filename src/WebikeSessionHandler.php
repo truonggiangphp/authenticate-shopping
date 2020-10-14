@@ -212,7 +212,7 @@ class WebikeSessionHandler implements ExistenceAwareInterface, SessionHandlerInt
      */
     protected function userId()
     {
-        return $this->container->make(Guard::class)->user()->kaiin_id;
+        return $this->container->make(Guard::class)->user()->kaiin_id ?? null;
     }
 
     /**
