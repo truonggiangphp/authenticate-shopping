@@ -3,6 +3,7 @@
 namespace Webikevn\AuthenticateShopping\Services;
 
 use Webikevn\AuthenticateShopping\Models\TblMpSession;
+use Illuminate\Support\Facades\Cookie;
 
 class Monoris
 {
