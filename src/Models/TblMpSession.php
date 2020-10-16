@@ -21,6 +21,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TblMpSession extends Model
 {
+    const MONORIS_HEADER = 'header';
+    const MONORIS_COOKIE = 'cookie';
+
     const AUTHENTICATE = 'authenticate';
 
     /**

@@ -2,42 +2,35 @@
 
 namespace Webikevn\AuthenticateShopping;
 
+use GuzzleHttp\RequestOptions;
 use Illuminate\Auth\EloquentUserProvider;
-use Illuminate\Contracts\Auth\Authenticatable as UserContract;
+use Illuminate\Auth\GenericUser;
 use Illuminate\Contracts\Auth\UserProvider;
-use Webikevn\AuthenticateShopping\Models\MstKaiin;
-use Webikevn\AuthenticateShopping\Models\TblSession;
+use GuzzleHttp\Client;
 
 class AuthUserShoppingProvider extends EloquentUserProvider implements UserProvider
 {
+    const SUCCESS = 'success';
+
     /**
      * @param array $credentials
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
     public function retrieveByCredentials(array $credentials)
     {
-        if (!$credentials) {
-            return null;
+        $response = $this->execute($credentials);
+        if (!$response) {
+            return false;
         }
 
-        $query = $this->createModel()->newQuery()
-            ->join(
-                with(new MstKaiin())->getTable(),
-                with(new TblSession())->getTable() . '.session_kaiin_id',
-                '=',
-                with(new MstKaiin())->getTable() . '.kaiin_id'
-            );
+        $response = json_decode($response, true);
 
-        foreach ($credentials as $key => $value) {
-            if ($key === with(new TblSession())->getTable() . '.session_id_a') {
-                // monoris9
-                $cut = 1;
-                $value = substr($value, $cut, strlen($value) - $cut);
-            }
-            $query->where($key, $value);
+        if ($response['result'] != self::SUCCESS) {
+            return false;
         }
+        $response['id'] = $response['kaiin_id'];
 
-        return $query->first();
+        return new GenericUser($response);
     }
 
     /**
@@ -45,10 +38,25 @@ class AuthUserShoppingProvider extends EloquentUserProvider implements UserProvi
      * @param array $credentials
      * @return bool
      */
-    public function validateCredentials(UserContract $user, array $credentials)
+    public function validateCredentials($user, array $credentials)
     {
-        $kaiin_mukou_date = $user->kaiin_mukou_date;
+        return isset($user->result) && $user->result == self::SUCCESS;
+    }
 
-        return is_null($kaiin_mukou_date) || $kaiin_mukou_date === '';
+    /**
+     * @param array $data
+     * @return string
+     */
+    private function execute(array $data): string
+    {
+        $client = new Client([
+            'headers' => ['content-type' => 'application/json', 'Accept' => 'applicatipon/json', 'charset' => 'utf-8'],
+            'verify' => false
+        ]);
+        $option[RequestOptions::QUERY] = $data;
+        $request = $client->get(config('shopping_authenticate.webike_api_verify_session'), $option);
+        $response = $request->getBody()->getContents();
+        $response = mb_convert_encoding($response, 'UTF-8', 'Shift-JIS');
+        return $response;
     }
 }

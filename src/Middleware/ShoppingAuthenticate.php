@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Closure;
 use Illuminate\Support\Facades\Cookie;
 use Webikevn\AuthenticateShopping\Models\TblMpSession;
-use Webikevn\AuthenticateShopping\Models\TblSession;
 use Webikevn\AuthenticateShopping\Services\Monoris;
 
 class ShoppingAuthenticate
@@ -28,9 +27,10 @@ class ShoppingAuthenticate
             return $this->response($request);
         }
         $credentials = [
-            with(new TblSession)->getTable() . '.session_id_a' => $monoris,
+            'sess_key' => $monoris
         ];
         $isAttempt = $auth->attempt($credentials) ?: false;
+
         if (!$isAttempt) {
             return $this->response($request);
         }

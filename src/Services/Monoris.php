@@ -2,7 +2,7 @@
 
 namespace Webikevn\AuthenticateShopping\Services;
 
-use Webikevn\AuthenticateShopping\Models\TblSession;
+use Webikevn\AuthenticateShopping\Models\TblMpSession;
 
 class Monoris
 {
@@ -12,7 +12,7 @@ class Monoris
      */
     public static function getMonoris($request)
     {
-        $isCookie = config('shopping_authenticate.monoris_authenticate_type') === TblSession::MONORIS_COOKIE;
+        $isCookie = config('shopping_authenticate.monoris_authenticate_type') === TblMpSession::MONORIS_COOKIE;
         $isDebug = config('shopping_authenticate.allow_debug_cookie');
 
         if ($isDebug) {
