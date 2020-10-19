@@ -5,16 +5,15 @@ namespace Webikevn\AuthenticateShopping;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Auth\GenericUser;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use GuzzleHttp\Client;
 
 class AuthUserShoppingProvider extends EloquentUserProvider implements UserProvider
 {
-    const SUCCESS = 'success';
-
     /**
      * @param array $credentials
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     * @return Authenticatable|null
      */
     public function retrieveByCredentials(array $credentials)
     {
@@ -24,23 +23,19 @@ class AuthUserShoppingProvider extends EloquentUserProvider implements UserProvi
         }
 
         $response = json_decode($response, true);
-
-        if ($response['result'] != self::SUCCESS) {
-            return false;
-        }
-        $response['id'] = $response['kaiin_id'];
-
-        return new GenericUser($response);
+        $data = isset($response['data']) ? $response['data'] : [];
+        $data['id'] = $data['kaiin_id'];
+        return new GenericUser($data);
     }
 
     /**
-     * @param \Illuminate\Contracts\Auth\Authenticatable $user
+     * @param Authenticatable $user
      * @param array $credentials
      * @return bool
      */
     public function validateCredentials($user, array $credentials)
     {
-        return isset($user->result) && $user->result == self::SUCCESS;
+        return isset($user->kaiin_id) && $user->kaiin_id;
     }
 
     /**
