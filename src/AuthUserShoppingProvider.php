@@ -24,7 +24,11 @@ class AuthUserShoppingProvider extends EloquentUserProvider implements UserProvi
 
         $response = json_decode($response, true);
         $data = isset($response['data']) ? $response['data'] : [];
-        $data['id'] = $data['kaiin_id'];
+        $kaiinId = isset($data['kaiin_id']) ? $data['kaiin_id'] : '';
+        if (!$kaiinId) {
+            return false;
+        }
+        $data['id'] = $kaiinId;
         return new GenericUser($data);
     }
 

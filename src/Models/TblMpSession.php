@@ -75,4 +75,21 @@ class TblMpSession extends Model
         'updated_date' => 'datetime:Y-m-d H:i:s',
         'expiry_date' => 'datetime:Y-m-d H:i:s',
     ];
+
+
+    /**
+     * @return mixed
+     */
+    public function getAuthIdentifierName()
+    {
+        return 'kaiin_id';
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAuthIdentifier()
+    {
+        return $this->kaiin_id;
+    }
 }
