@@ -29,7 +29,7 @@ class AuthUserShoppingProvider extends EloquentUserProvider implements UserProvi
             return false;
         }
         $data['id'] = $kaiinId;
-        return new GenericUser($data);
+        return new WebikeUser($data);
     }
 
     /**
