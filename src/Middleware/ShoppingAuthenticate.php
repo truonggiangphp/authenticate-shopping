@@ -35,9 +35,8 @@ class ShoppingAuthenticate
             return $this->response($request);
         }
 
-        $request->session()->setId(mb_substr($monoris, 0, 40));
-
         if ($isSaveAuthenticateSession) {
+            $request->session()->setId(mb_substr($monoris, 0, 40));
             $sessionAuthenticate = $request->session()->get(TblMpSession::AUTHENTICATE);
             if (!$sessionAuthenticate) {
                 $request->session()->put(TblMpSession::AUTHENTICATE, [
