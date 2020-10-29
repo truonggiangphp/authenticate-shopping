@@ -29,6 +29,7 @@ class AuthUserShoppingProvider extends EloquentUserProvider implements UserProvi
             return false;
         }
         $data['id'] = $kaiinId;
+        $data['remember_token'] = null;
         return new WebikeUser($data);
     }
 
