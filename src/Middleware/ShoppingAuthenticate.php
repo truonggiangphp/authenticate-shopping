@@ -31,7 +31,7 @@ class ShoppingAuthenticate
         ];
         $isAttempt = $auth->attempt($credentials) ?: false;
 
-        if (!$isAttempt) {
+        if (!$isAttempt && $request->wantsJson()) {
             return $this->response($request);
         }
 
@@ -57,10 +57,6 @@ class ShoppingAuthenticate
      */
     private function response($request)
     {
-        if ($request->ajax() || $request->wantsJson()) {
-            return response('Unauthorized.', 401);
-        } else {
-            return redirect(config('shopping_authenticate.domain') . '?nextpage=' . $request->fullUrl());
-        }
+        return response('Unauthorized.', 401);
     }
 }
