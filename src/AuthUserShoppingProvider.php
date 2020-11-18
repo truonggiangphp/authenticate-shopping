@@ -8,6 +8,7 @@ use Illuminate\Auth\GenericUser;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use GuzzleHttp\Client;
+use Webikevn\AuthenticateShopping\Services\Monoris;
 
 class AuthUserShoppingProvider extends EloquentUserProvider implements UserProvider
 {
@@ -18,6 +19,35 @@ class AuthUserShoppingProvider extends EloquentUserProvider implements UserProvi
     public function retrieveByCredentials(array $credentials)
     {
         $response = $this->execute($credentials);
+        if (!$response) {
+            return false;
+        }
+
+        $response = json_decode($response, true);
+        $data = isset($response['data']) ? $response['data'] : [];
+        $kaiinId = isset($data['kaiin_id']) ? $data['kaiin_id'] : '';
+        if (!$kaiinId) {
+            return false;
+        }
+        $data['id'] = $kaiinId;
+        $data['remember_token'] = null;
+        return new WebikeUser($data);
+    }
+
+    /**
+     * Retrieve a user by their unique identifier.
+     *
+     * @param  mixed  $identifier
+     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     */
+    public function retrieveById($identifier)
+    {
+        $auth = \Auth::guard(config('shopping_authenticate.auth_driver'));
+        $isSaveAuthenticateSession = config('shopping_authenticate.is_enable_store_session');
+        $monoris = Monoris::getMonoris(request());
+        $response = $this->execute([
+            'sess_key' => $monoris
+        ]);
         if (!$response) {
             return false;
         }
